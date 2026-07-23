@@ -1,0 +1,2 @@
+libheif1
+libde265-0

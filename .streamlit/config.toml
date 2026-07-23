@@ -1,0 +1,4 @@
+[server]
+# Streamlit 既定は 200MB/file。アプリ側の入力合計上限（40MB）に合わせる
+maxUploadSize = 40
+maxMessageSize = 40
