@@ -1,7 +1,13 @@
 """pipeline / dto 単体テスト."""
 
+import io
+import zipfile
+
+import fitz
+import pytest
+
 from src import BatchResult, InputFile, OutputArtifact, process_files
-from src.config import PRESETS
+from src.config import MAX_FILENAME_CHARS, PRESETS
 from src.options import ProcessOptions
 from src.ziputil import zip_artifacts
 
@@ -106,3 +112,38 @@ def test_images_to_pdf_pdf_only_no_false_error(simple_pdf_bytes: bytes) -> None:
     )
     assert len(batch.outputs) >= 1
     assert not any("画像ファイルが必要" in msg for _, msg in batch.errors)
+
+
+_LONG_STEM = "とても長いファイル名" * 30  # 300 文字
+
+
+def _two_page_pdf() -> bytes:
+    doc = fitz.open()
+    for i in range(2):
+        doc.new_page().insert_text((72, 72), f"page {i + 1}")
+    data = doc.tobytes()
+    doc.close()
+    return data
+
+
+@pytest.mark.parametrize("preset_id", sorted(PRESETS))
+@pytest.mark.parametrize("split_pdf", [False, True])
+def test_all_output_names_within_network_print_limit(
+    preset_id: str, split_pdf: bool, webp_bytes: bytes
+) -> None:
+    """ネットワークプリントは 100 文字超のファイル名でアップロード失敗する."""
+    batch = process_files(
+        [
+            InputFile(f"{_LONG_STEM}.webp", webp_bytes),
+            InputFile(f"{_LONG_STEM}.pdf", _two_page_pdf()),
+        ],
+        PRESETS[preset_id],
+        options=ProcessOptions(split_pdf=split_pdf, pages_per_file=1),
+    )
+    assert batch.outputs, batch.errors
+    for out in batch.outputs:
+        assert len(out.name) <= MAX_FILENAME_CHARS, out.name
+
+    with zipfile.ZipFile(io.BytesIO(zip_artifacts(batch.outputs + batch.outputs))) as zf:
+        for arc in zf.namelist():
+            assert len(arc) <= MAX_FILENAME_CHARS, arc

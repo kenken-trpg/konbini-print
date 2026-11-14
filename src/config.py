@@ -20,6 +20,8 @@ _seven = _pl["seven_photo"]
 _nw = _pl["network"]
 
 MAX_FILE_BYTES = int(_pl["max_file_bytes"])
+# ネットワークプリントは 100 文字超のファイル名でアップロードに失敗する（拡張子込み）
+MAX_FILENAME_CHARS = int(_pl["max_filename_chars"])
 MIN_JPEG_QUALITY = int(_pl["min_jpeg_quality"])
 DEFAULT_JPEG_QUALITY = int(_pl["default_jpeg_quality"])
 DEFAULT_BG = tuple(_pl["default_bg"])  # type: ignore[assignment]
@@ -65,6 +67,7 @@ __all__ = [
     "FitMode",
     "IMAGE_EXTENSIONS",
     "MAX_FILE_BYTES",
+    "MAX_FILENAME_CHARS",
     "MIN_JPEG_QUALITY",
     "NW_MAX_PAGES_A3",
     "NW_MAX_PAGES_A4",
