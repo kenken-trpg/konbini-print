@@ -36,11 +36,15 @@
 ## 推奨ロードマップ
 
 1. **本線（このリポジトリ）**: サーバー変換 + アップロード + 公開 URL 取得（現行）
-2. **スパイクブランチ** `spike/client-side`: ブラウザで JPEG/PNG/WebP のフィット＆圧縮だけ再現  
-   ※ `client/` は本線ツリーに置かない（デプロイ対象・レビュー範囲を曖昧にしない）
-3. 問題なければ**別リポジトリ**へ分離し、HEIC / PDF を追加
+2. **スパイクブランチ** `spike/client-side`: ブラウザでフィット＆圧縮を再現  
+   ※ `client/` は本線ツリーに置かない（デプロイ対象・レビュー範囲を曖昧にしない）  
+   ※ 置き場・起動手順: ブランチ上の [`client/README.md`](../client/README.md)  
+   ※ スパイク済み: JPEG/PNG/WebP + **ZIP** + **HEIC** + **PDF 3a（ページ→JPEG）**（URL 取得なし）  
+   ※ 本線との比較チェックリスト: [`client/README.md`](../client/README.md#本線との比較チェックリスト)（**1〜8 検証完了 / Go**）
+3. 比較は **Go（検証完了）**。最終形は**別リポジトリ分離 → GitHub Pages**。  
+   UX 等の追加はこのブランチでも可。区切り後に分離する
 
-共有契約は本線の `src/domain/domain.json` をコピー／参照する。
+共有契約は本線の `src/domain/domain.json` をコピー／参照する（スパイクでは `client/domain.json`）。
 
 ## 本線コア API（フォーク起点）
 

@@ -1,0 +1,374 @@
+{
+  "version": 1,
+  "verified_as_of": "2026-07-23",
+  "notes": "ドメイン知識の単一ソース。クライアントフォークはこの JSON を共有する。数値は公式仕様の目安。",
+  "print_limits": {
+    "max_file_bytes": 10485760,
+    "max_filename_chars": 100,
+    "min_jpeg_quality": 40,
+    "default_jpeg_quality": 90,
+    "default_bg": [255, 255, 255],
+    "seven_photo": {
+      "ratio_min": 1.3,
+      "ratio_max": 1.5,
+      "min_px": [352, 251],
+      "max_side": 6144,
+      "max_pages": 99
+    },
+    "network": {
+      "min_long_px": 320,
+      "min_short_px": 240,
+      "max_pages_a4": 50,
+      "max_pages_a3": 30
+    }
+  },
+  "resource_limits": {
+    "max_input_files": 20,
+    "max_input_total_bytes": 41943040,
+    "max_urls_per_request": 10,
+    "max_download_bytes": 26214400,
+    "max_image_pixels": 25000000,
+    "max_pdf_pages": 100,
+    "max_rasterize_dpi": 200,
+    "max_rasterize_page_dpi_product": 8000,
+    "allow_url_fetch": true,
+    "max_session_result_bytes": 52428800,
+    "max_session_outputs": 30
+  },
+  "canvases": {
+    "L": [1051, 1500],
+    "2L": [1500, 2102],
+    "A4": [1654, 2339],
+    "SQUARE": [1500, 1500],
+    "HAGAKI": [1181, 1748]
+  },
+  "pdf_split_page_choices": [10, 30, 50, 99],
+  "check_profiles": {
+    "photo": [
+      "max_file_bytes",
+      "nw_min_size",
+      "photo_ratio",
+      "max_side",
+      "seven_min_size"
+    ],
+    "square": ["max_file_bytes", "nw_min_size", "square_ratio", "max_side"],
+    "plain": ["max_file_bytes", "nw_min_size", "max_side"],
+    "hagaki": ["max_file_bytes", "nw_min_size", "max_side"],
+    "pdf": ["max_file_bytes", "pdf_pages_ref"]
+  },
+  "service_labels": {
+    "both": "両サービス共通（ネットワークプリント / セブンネットプリント）",
+    "network": "ネットワークプリント",
+    "seven": "セブンネットプリント"
+  },
+  "messages": {
+    "pdf_compat_honest": "「PDF 互換化」はページの再保存（非暗号化）です。PDF 1.4 強制や複雑な注釈・フォント問題の解消は保証しません。登録に失敗する場合はラスタライズ互換を試してください。",
+    "disclaimer_md": "**本アプリは非公式の変換ツールです。**  \nネットワークプリント（富士フイルム等）およびセブンネットプリント（富士フイルムビジネスイノベーション等）の公式サービス・公式アプリではありません。\n各社・各サービスとは提携・委託関係はありません。\n\n- 変換結果の登録可否・印刷品質は保証しません\n- 制限値は公式仕様を参考にした**目安**です。必ず最新の公式ページを確認してください\n- アップロードファイルは永続保存しません（セッション内の一時処理のみ）\n- 公式サービスへの自動アップロードは行いません\n"
+  },
+  "extensions": {
+    "image": [".jpg", ".jpeg", ".jpe", ".png", ".webp", ".heic", ".heif", ".tif", ".tiff", ".bmp", ".gif"],
+    "pdf": [".pdf"]
+  },
+  "preset_order": [
+    "both_all",
+    "both_l",
+    "both_2l",
+    "both_plain_a4",
+    "both_hagaki",
+    "both_safe",
+    "pdf_compat",
+    "images_to_pdf",
+    "nw_l",
+    "nw_2l",
+    "nw_square",
+    "seven_l",
+    "seven_2l"
+  ],
+  "presets": [
+    {
+      "id": "both_all",
+      "label": "【両サービス】全用途パック（L + 2L + A4）",
+      "service": "both",
+      "kind": "pack",
+      "pipeline": "pack",
+      "canvas": null,
+      "output": "jpeg",
+      "check_profile": "plain",
+      "targets": [],
+      "variants": [
+        {
+          "suffix": "photo_L",
+          "canvas": "L",
+          "kind": "photo",
+          "check_profile": "photo",
+          "targets": [
+            "ネットワークプリント: 画像プリント（フォト L 相当）",
+            "セブンネットプリント: フォト用紙 L"
+          ]
+        },
+        {
+          "suffix": "photo_2L",
+          "canvas": "2L",
+          "kind": "photo",
+          "check_profile": "photo",
+          "targets": [
+            "ネットワークプリント: 画像プリント（フォト 2L 相当）",
+            "セブンネットプリント: フォト用紙 2L"
+          ]
+        },
+        {
+          "suffix": "plain_A4",
+          "canvas": "A4",
+          "kind": "plain",
+          "check_profile": "plain",
+          "targets": [
+            "ネットワークプリント: 画像プリント（普通紙 A4）",
+            "セブンネットプリント: 普通紙 A4（画像）"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "both_l",
+      "label": "【両サービス】フォト L",
+      "service": "both",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": [
+        "ネットワークプリント: 画像プリント（フォト L 相当）",
+        "セブンネットプリント: フォト用紙 L"
+      ]
+    },
+    {
+      "id": "both_2l",
+      "label": "【両サービス】フォト 2L",
+      "service": "both",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "2L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": [
+        "ネットワークプリント: 画像プリント（フォト 2L 相当）",
+        "セブンネットプリント: フォト用紙 2L"
+      ]
+    },
+    {
+      "id": "both_plain_a4",
+      "label": "【両サービス】普通紙 A4（画像）",
+      "service": "both",
+      "kind": "plain",
+      "pipeline": "image",
+      "canvas": "A4",
+      "output": "jpeg",
+      "dpi": 200,
+      "check_profile": "plain",
+      "targets": [
+        "ネットワークプリント: 画像プリント（普通紙 A4）",
+        "セブンネットプリント: 普通紙 A4（画像）"
+      ]
+    },
+    {
+      "id": "both_hagaki",
+      "label": "【両サービス】はがき（画像・100×148mm）",
+      "service": "both",
+      "kind": "plain",
+      "pipeline": "image",
+      "canvas": "HAGAKI",
+      "output": "jpeg",
+      "check_profile": "hagaki",
+      "targets": [
+        "ネットワークプリント: はがきプリント（対応機のみ）",
+        "セブンネットプリント: はがき（画像）"
+      ]
+    },
+    {
+      "id": "both_safe",
+      "label": "【両サービス】画像安全化（サイズ維持）",
+      "service": "both",
+      "kind": "plain",
+      "pipeline": "image",
+      "canvas": null,
+      "output": "jpeg",
+      "check_profile": "plain",
+      "targets": [
+        "ネットワークプリント: 画像プリント（用途は店頭で選択）",
+        "セブンネットプリント: 普通紙など（フォトは縦横比に注意）"
+      ]
+    },
+    {
+      "id": "pdf_compat",
+      "label": "【両サービス】PDF 再保存（非暗号化）",
+      "service": "both",
+      "kind": "pdf",
+      "pipeline": "pdf",
+      "canvas": null,
+      "output": "pdf",
+      "check_profile": "pdf",
+      "targets": [
+        "ネットワークプリント: 文書プリント（登録可否は要確認）",
+        "セブンネットプリント: 文書プリント（登録可否は要確認）"
+      ]
+    },
+    {
+      "id": "images_to_pdf",
+      "label": "【両サービス】画像まとめ PDF（A4）",
+      "service": "both",
+      "kind": "pdf",
+      "pipeline": "images_to_pdf",
+      "canvas": "A4",
+      "output": "pdf",
+      "dpi": 200,
+      "check_profile": "pdf",
+      "targets": [
+        "ネットワークプリント: 文書プリント（A4 画像まとめ）",
+        "セブンネットプリント: 普通紙・文書（A4 画像まとめ）"
+      ]
+    },
+    {
+      "id": "nw_l",
+      "label": "ネットワークプリント フォト L",
+      "service": "network",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": ["ネットワークプリント: 画像プリント（フォト L 相当）"]
+    },
+    {
+      "id": "nw_2l",
+      "label": "ネットワークプリント フォト 2L",
+      "service": "network",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "2L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": ["ネットワークプリント: 画像プリント（フォト 2L 相当）"]
+    },
+    {
+      "id": "nw_square",
+      "label": "ネットワークプリント スクエア（127×127mm）",
+      "service": "network",
+      "kind": "plain",
+      "pipeline": "image",
+      "canvas": "SQUARE",
+      "output": "jpeg",
+      "check_profile": "square",
+      "targets": [
+        "ネットワークプリント: 画像プリント（スクエア・対応機のみ）"
+      ]
+    },
+    {
+      "id": "seven_l",
+      "label": "セブン フォト L",
+      "service": "seven",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": ["セブンネットプリント: フォト用紙 L"]
+    },
+    {
+      "id": "seven_2l",
+      "label": "セブン フォト 2L",
+      "service": "seven",
+      "kind": "photo",
+      "pipeline": "image",
+      "canvas": "2L",
+      "output": "jpeg",
+      "check_profile": "photo",
+      "targets": ["セブンネットプリント: フォト用紙 2L"]
+    }
+  ],
+  "services": [
+    {
+      "id": "network",
+      "name": "ネットワークプリント",
+      "links": [
+        {"label": "公式サイト", "url": "https://networkprint.ne.jp/"},
+        {
+          "label": "ご利用方法・仕様",
+          "url": "https://networkprint.ne.jp/info/howto/lite.html"
+        }
+      ],
+      "options": [
+        {
+          "option": "画像プリント（L判 / 2L判 / スクエア 等）",
+          "formats": "JPEG / PNG（JPEG は RGB）",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "小さすぎると拡大され画質劣化の恐れ（長辺320px・短辺240px以上が目安）",
+          "notes": "写真用紙・シール紙など。店舗機種により選択肢が異なります。"
+        },
+        {
+          "option": "画像プリント（普通紙 B5/A4/B4/A3・光沢紙A4）",
+          "formats": "JPEG / PNG",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "同上（極端に小さい画像は非推奨）",
+          "notes": "店頭で用紙タイプを選択。引きのばし等も機種による。"
+        },
+        {
+          "option": "文書プリント（PDF 等）",
+          "formats": "PDF Ver.1.3〜1.7 / Word 等（会員で Excel・PowerPoint 可）",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "A3: 30ページまで / B5・A4・B4: 50ページまで（目安）",
+          "notes": "暗号化 PDF や特殊注釈は非対応のことがあります。"
+        },
+        {
+          "option": "はがきプリント",
+          "formats": "JPEG / PNG / PDF 等",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "サービス仕様に準拠",
+          "notes": "はがき対応機のみ。登録時にはがきプリントとして登録が必要。"
+        }
+      ],
+      "common": [
+        "登録上限ファイル数: 最大24（うちはがきは10まで、目安）",
+        "保管期限: 登録日を含む8日間（会員で延長可）"
+      ]
+    },
+    {
+      "id": "seven",
+      "name": "セブンネットプリント（netprint）",
+      "links": [
+        {"label": "公式サイト", "url": "https://www.printing.ne.jp/"},
+        {
+          "label": "仕様・注意制限事項",
+          "url": "https://www.printing.ne.jp/support/attention.html"
+        }
+      ],
+      "options": [
+        {
+          "option": "フォト用紙（L / 2L）",
+          "formats": "主に JPEG（Lサイズは JPEG のみの記載あり）",
+          "size_limit": "合計10MB以下（複数枚まとめる場合あり）",
+          "dimensions": "縦横比 1:1.3〜1:1.5 / 最小 352×251px / 最大 6144×4388px",
+          "notes": "推奨: L 約1074×1524px〜 / 2L 約1536×2138px〜。端が数mmカットされます。"
+        },
+        {
+          "option": "普通紙（A3/A4/B4/B5）・はがき（画像）",
+          "formats": "JPEG / PNG / TIFF 等",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "原稿サイズ目安: 最大 A2 相当〜最小 A7 相当",
+          "notes": "透過 PNG 非対応。用紙に合わせて拡大縮小されます。"
+        },
+        {
+          "option": "普通紙・はがき（文書 PDF 等）",
+          "formats": "PDF Ver.1.3〜2.0 / Office / XPS / DocuWorks 等",
+          "size_limit": "1ファイル 10MB 以下",
+          "dimensions": "99ページを超えるファイルは登録不可",
+          "notes": "パスワード保護・互換性問題で登録失敗することがあります。"
+        }
+      ],
+      "common": [
+        "プリント料金合計の上限などの追加制限あり（公式仕様参照）",
+        "ファイル名の記号・絵文字で失敗することがあります"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>コンビニ用に写真を整える（この端末だけで）</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="badge">この端末だけで変換 · 写真を外に送りません</p>
+        <h1>コンビニ用に写真を整える</h1>
+        <p class="lede">
+          写真や PDF を、コンビニ印刷に出しやすい大きさ・重さにします。<br />
+          作業はスマホやパソコンの中だけで終わります。写真は外に送られません。
+        </p>
+        <ol class="howto">
+          <li>下の枠に写真を入れる（タップか、ドラッグ）</li>
+          <li>用紙の大きさを選ぶ</li>
+          <li>「整える」を押す → できたら保存</li>
+        </ol>
+      </header>
+
+      <section class="panel">
+        <div class="dropzone" id="dropzone">
+          <input
+            id="files"
+            class="dropzone-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,application/pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.heif,.pdf"
+            multiple
+          />
+          <label class="dropzone-label" for="files">
+            <span class="dropzone-title" id="dropTitle">ここに写真を置く / タップして選ぶ</span>
+            <span class="dropzone-hint">
+              使えるもの：写真（JPEG・PNG・iPhone の HEIC など）と PDF<br />
+              一度にだいたい 20 個まで
+            </span>
+            <span class="dropzone-files" id="fileList" hidden></span>
+          </label>
+        </div>
+
+        <label class="field">
+          用紙の大きさ
+          <select id="preset"></select>
+          <span class="hint">迷ったら「写真 L（いちばんよく使う）」で大丈夫です</span>
+        </label>
+
+        <details class="more">
+          <summary>くわしい設定（ふつうは触らなくてOK）</summary>
+          <div class="more-body">
+            <label class="field">
+              はみ出し方
+              <select id="fitMode">
+                <option value="fit" selected>切れないようにする（周りに余白）</option>
+                <option value="crop">用紙いっぱいに広げる（はみ出した分は切る）</option>
+              </select>
+            </label>
+            <label class="row field">
+              <input id="safeInset" type="checkbox" />
+              端が切れにくいように、少し内側に入れる（セブン向け）
+            </label>
+            <label class="field">
+              余白の色（白が無難）
+              <input id="bg" type="text" value="#ffffff" inputmode="text" autocomplete="off" />
+            </label>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button class="btn" id="convertBtn" type="button">整える</button>
+          <button class="btn secondary" id="downloadZip" type="button" disabled>
+            まとめて保存（ZIP）
+          </button>
+        </div>
+
+        <div class="progress" id="progress" hidden>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p class="progress-text" id="progressText"></p>
+        </div>
+
+        <p class="status" id="status" role="status"></p>
+        <div class="issues" id="issues" hidden></div>
+      </section>
+
+      <section>
+        <h2 class="section-title" id="resultsHeading" hidden>できた写真</h2>
+        <div class="results" id="results"></div>
+      </section>
+
+      <footer>
+        <p>
+          これは公式のコンビニアプリではありません。印刷できるかはお店側のルール次第です。<br />
+          PDF は「ページを写真にする」だけです（スマホは最大10ページまで）。動く GIF は最初の1枚だけ。
+        </p>
+        <p>
+          開発者向けメモ:
+          <a href="./README.md">README.md</a>
+        </p>
+      </footer>
+    </div>
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
