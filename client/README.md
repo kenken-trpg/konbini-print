@@ -26,6 +26,13 @@ HEIC / PDF / ZIP 用ライブラリは [`vendor/`](./vendor/) に **ピン留め
 **初回にその機能を使うときだけ**読み込む（JPEG/PNG/WebP だけなら vendor を読まない）。合計およそ 3MB。  
 フォントも外部配信を使わない（端末の日本語フォント）。
 
+## 公開
+
+GitHub Pages: https://kenken-trpg.github.io/konbini-print/
+
+`master` への push で `client/` か `src/domain/domain.json` が変わると、`.github/workflows/pages.yml` がテストのあと自動で公開する（Actions 画面から手動実行も可）。  
+公開するのは `client/` 配下だけで、`tests/`・`fixtures/`・`package.json` は含めない。
+
 ## 起動
 
 ```bash
@@ -124,7 +131,7 @@ client/
 | ブラウザ JPEG と Pillow で容量が数 % ずれる | 比較済みで許容 |
 | `domain.json` は本線の**コピー** | 本線を変更したらコピーする。ずれは `tests/test_client_domain_sync.py`（CI）で検知 |
 | GIF | 先頭フレームのみ（UI・警告で明記） |
-| GitHub Pages | `client/` 配下だけ公開。フッターは `./README.md` のみ（`../docs` は使わない） |
+| GitHub Pages | `client/` 配下だけ公開（`tests/`・`fixtures/`・`package.json` は除く）。フッターは `./README.md` のみ（`../docs` は使わない。README 内の `../` リンクは Pages では切れる） |
 | 外部フォント | 使わない（システム日本語フォント） |
 | vendor | 機能初回のみ遅延読込＋「読み込み中」表示 |
 | 大 PDF / 多枚 | ソフト警告、スマホは PDF 最大10頁・解像度抑制、失敗時は分割を案内 |
@@ -174,7 +181,7 @@ Streamlit 版と**両方長く維持する**。`client/` は同じリポジト�
 2. ~~UX / Pages 前の中優先（vendor・フォント・大PDF・HEICメモ）~~
 3. ~~HEIC 実機確認（`IMG_2145.HEIC`）~~ → OK。残り Pages 前チェックは任意
 4. ~~別リポ分離~~ → 同じリポジトリで並行維持に変更
-5. **GitHub Pages** 公開（`client/` 配下だけを配信）
+5. **GitHub Pages** 公開（`client/` 配下だけを配信）→ `.github/workflows/pages.yml`
 
 ### 今後の候補
 

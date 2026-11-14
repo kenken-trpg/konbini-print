@@ -58,7 +58,7 @@
 | 共通ルールの変更 | ファイル名・上限値・適合チェックなど両方に関わる変更は、**同じ PR で Python と JS の両方**を直し、両方にテストを付ける |
 | 片方だけの変更 | PR は片方に閉じる（`client/` だけ／`src/`・`app.py` だけ）。範囲が混ざる大きな変更は PR を分ける |
 | CI | `.github/workflows/ci.yml` が `pytest` と `client` の `npm test` を両方実行する |
-| デプロイ | Streamlit Cloud は `app.py` だけを動かすので、`client/` は影響しない。ブラウザ版の公開（GitHub Pages 等）は `client/` 配下だけを配信する（未設定） |
+| デプロイ | Streamlit Cloud は `app.py` だけを動かすので、`client/` は影響しない。ブラウザ版は GitHub Pages（https://kenken-trpg.github.io/konbini-print/）で公開する。`.github/workflows/pages.yml` が master への push（`client/` か `src/domain/domain.json` の変更時）でテスト → `client/` 配下だけを配信する |
 | 意図的な差 | 機能差（URL 取得はブラウザ版なし、PDF の扱いなど）は [`client/README.md`](../client/README.md#仕様メモバグではない差分運用) に記録する |
 
 ## 本線コア API（フォーク起点）
