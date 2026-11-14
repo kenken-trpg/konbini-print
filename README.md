@@ -31,6 +31,7 @@ batch = process_files(
 ```
 
 プリセットは `pipeline`（`image` / `pdf` / `images_to_pdf` / `pack`）と自己完結の `variants` でテーブル駆動です。
+ブラウザ版は GitHub Pages で公開しています: https://kenken-trpg.github.io/konbini-print/  
 ブラウザ版の構成・起動・Streamlit 版との対応は [`client/README.md`](client/README.md)、2 つを並行維持する運用ルールは [`docs/CLIENT_SIDE.md`](docs/CLIENT_SIDE.md#並行維持の方針) を参照してください。
 
 
