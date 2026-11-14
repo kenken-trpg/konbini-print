@@ -1,8 +1,9 @@
 # コンビニプリント一括変換
 
-ネットワークプリント / セブンネットプリント向けに、画像・PDF を登録しやすい形式へ一括変換する Streamlit アプリです。
+ネットワークプリント / セブンネットプリント向けに、画像・PDF を登録しやすい形式へ一括変換するツールです。
+**Streamlit 版**（サーバー変換・公開 URL 取得あり）と、**ブラウザ版** `client/`（ファイルを端末の外に出さない）の 2 つを同じリポジトリで並行して維持します。
 
-## 構成（本線）
+## 構成
 
 ```text
 app.py                 # Streamlit UI のみ
@@ -12,6 +13,7 @@ src/
   convert/             # 変換層（画像・PDF・pipeline の再エクスポート）
   io/                  # I/O 層（URL・ZIP・ファイル名・ログ）
   pipeline.py / handlers/ / image_convert.py / ...
+client/                # ブラウザ版（静的ファイルのみ。client/README.md）
 docs/
 ```
 
@@ -29,7 +31,7 @@ batch = process_files(
 ```
 
 プリセットは `pipeline`（`image` / `pdf` / `images_to_pdf` / `pack`）と自己完結の `variants` でテーブル駆動です。
-クライアント側スパイクは本線ツリーに含めず、`docs/CLIENT_SIDE.md` と別ブランチ `spike/client-side` で検討します。
+ブラウザ版の構成・起動・Streamlit 版との対応は [`client/README.md`](client/README.md)、2 つを並行維持する運用ルールは [`docs/CLIENT_SIDE.md`](docs/CLIENT_SIDE.md#並行維持の方針) を参照してください。
 
 
 - HEIC / WebP 含む画像の一括変換
@@ -58,7 +60,12 @@ streamlit run app.py
 ```bash
 pip install -r requirements-dev.txt
 pytest
+
+# ブラウザ版（Node 18+、依存なし）
+cd client && npm test
 ```
+
+CI（`.github/workflows/ci.yml`）は push / PR ごとに両方を実行します。
 
 ## ログ
 
