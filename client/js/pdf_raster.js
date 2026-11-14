@@ -72,7 +72,12 @@ export async function rasterizePdfPages(
   const data = new Uint8Array(await blob.arrayBuffer());
   let doc;
   try {
-    doc = await pdfjs.getDocument({ data, useSystemFonts: true }).promise;
+    doc = await pdfjs.getDocument({
+      data,
+      useSystemFonts: true,
+      // 多層防御: フォント描画で eval / new Function を使わせない
+      isEvalSupported: false,
+    }).promise;
   } catch (err) {
     throw new Error(friendlyPdfError(err));
   }
