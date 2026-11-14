@@ -33,18 +33,33 @@
 - Streamlit Cloud に静的フロントを無理に載せるメリットは小さい
 - 「公式っぽい変換ツール」を Cloud で出すなら、当面はサーバー変換＋URL 取得で十分
 
-## 推奨ロードマップ
+## これまでの経緯
 
-1. **本線（このリポジトリ）**: サーバー変換 + アップロード + 公開 URL 取得（現行）
-2. **スパイクブランチ** `spike/client-side`: ブラウザでフィット＆圧縮を再現  
-   ※ `client/` は本線ツリーに置かない（デプロイ対象・レビュー範囲を曖昧にしない）  
-   ※ 置き場・起動手順: ブランチ上の [`client/README.md`](../client/README.md)  
-   ※ スパイク済み: JPEG/PNG/WebP + **ZIP** + **HEIC** + **PDF 3a（ページ→JPEG）**（URL 取得なし）  
-   ※ 本線との比較チェックリスト: [`client/README.md`](../client/README.md#本線との比較チェックリスト)（**1〜8 検証完了 / Go**）
-3. 比較は **Go（検証完了）**。最終形は**別リポジトリ分離 → GitHub Pages**。  
-   UX 等の追加はこのブランチでも可。区切り後に分離する
+1. Streamlit 版（サーバー変換 + アップロード + 公開 URL 取得）を先に整備した
+2. ブランチ `spike/client-side` でブラウザ版を試作した。この間は「`client/` は master に置かない（デプロイ対象・レビュー範囲を曖昧にしない）」としていた  
+   ※ 試作の範囲: JPEG/PNG/WebP + **ZIP** + **HEIC** + **PDF 3a（ページ→JPEG）**（URL 取得なし）  
+   ※ Streamlit 版との比較: [`client/README.md`](../client/README.md#本線との比較チェックリスト)（**1〜8 検証完了 / Go**）
+3. 当初は「別リポジトリに分離して GitHub Pages で公開」を最終形としていたが、2026-11-14 に下記の方針へ変更した
 
-共有契約は本線の `src/domain/domain.json` をコピー／参照する（スパイクでは `client/domain.json`）。
+## 並行維持の方針
+
+**決定（2026-11-14）**: Streamlit 版とブラウザ版を**両方長く維持する**。そのため `client/` を **同じリポジトリの master に置く**（別リポジトリには分けない）。
+
+理由:
+
+- `domain.json` と、ファイル名の整え方などのルールを 2 つの実装で共有しているため。同じリポジトリなら、ずれの検知と両方の修正を 1 つの PR で済ませられる（例: ファイル名 100 文字制限は Python と JS の両方に入れる必要があった）
+- 長く残るブランチや別リポジトリでは、手作業の同期と cherry-pick が続く
+
+運用ルール:
+
+| 項目 | ルール |
+|------|--------|
+| `domain.json` | 正本は `src/domain/domain.json`。変更したら `client/domain.json` にもコピーする。`tests/test_client_domain_sync.py` が一致しないと失敗する |
+| 共通ルールの変更 | ファイル名・上限値・適合チェックなど両方に関わる変更は、**同じ PR で Python と JS の両方**を直し、両方にテストを付ける |
+| 片方だけの変更 | PR は片方に閉じる（`client/` だけ／`src/`・`app.py` だけ）。範囲が混ざる大きな変更は PR を分ける |
+| CI | `.github/workflows/ci.yml` が `pytest` と `client` の `npm test` を両方実行する |
+| デプロイ | Streamlit Cloud は `app.py` だけを動かすので、`client/` は影響しない。ブラウザ版の公開（GitHub Pages 等）は `client/` 配下だけを配信する（未設定） |
+| 意図的な差 | 機能差（URL 取得はブラウザ版なし、PDF の扱いなど）は [`client/README.md`](../client/README.md#仕様メモバグではない差分運用) に記録する |
 
 ## 本線コア API（フォーク起点）
 
