@@ -2,6 +2,8 @@ name: Pages
 
 # ブラウザ版（client/）を GitHub Pages に公開する。
 # 公開するのは client/ 配下だけ（tests/・fixtures/・package.json は除く）。
+# PR ではビルドまで確認し、公開（deploy）は master だけで行う。
+# github-pages 環境のデプロイ元ブランチは master に限定している（リポジトリ設定）。
 on:
   push:
     branches: [master]
@@ -9,23 +11,29 @@ on:
       - "client/**"
       - "src/domain/domain.json"
       - ".github/workflows/pages.yml"
+  pull_request:
+    paths:
+      - "client/**"
+      - "src/domain/domain.json"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "20"
       - name: ブラウザ版のテスト
@@ -47,18 +55,21 @@ jobs:
             --exclude fixtures/ \
             --exclude package.json \
             client/ _site/
-          ls -R _site | head -50
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          find _site -type f | sort
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
 
   deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
