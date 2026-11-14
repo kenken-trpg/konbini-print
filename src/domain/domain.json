@@ -4,6 +4,7 @@
   "notes": "ドメイン知識の単一ソース。クライアントフォークはこの JSON を共有する。数値は公式仕様の目安。",
   "print_limits": {
     "max_file_bytes": 10485760,
+    "max_filename_chars": 100,
     "min_jpeg_quality": 40,
     "default_jpeg_quality": 90,
     "default_bg": [255, 255, 255],

@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 from ..config import Preset, get_preset
 from ..dto import BatchResult, InputFile
-from ..filenames import sanitize_stem
+from ..filenames import build_filename, sanitize_stem
 from ..image_convert import convert_image
 from ..options import ProcessOptions
 from ..pdf_convert import PdfConvertResult
@@ -55,8 +55,8 @@ def process_pack(
                         output_format="JPEG",
                         safe_inset=options.safe_inset,
                     )
-                    out_name = (
-                        f"{sanitize_stem(src.name)}_{idx:03d}_{variant.suffix}.jpg"
+                    out_name = build_filename(
+                        sanitize_stem(src.name), f"_{idx:03d}_{variant.suffix}", ".jpg"
                     )
                     batch.outputs.append(
                         image_artifact(

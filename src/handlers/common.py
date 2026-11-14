@@ -7,7 +7,7 @@ from pathlib import Path
 
 from ..config import IMAGE_EXTENSIONS, PDF_EXTENSIONS, Preset
 from ..dto import BatchResult, OutputArtifact
-from ..filenames import sanitize_filename, sanitize_stem
+from ..filenames import build_filename, sanitize_filename, sanitize_stem
 from ..options import ProcessOptions
 from ..pdf_convert import (
     PdfConvertResult,
@@ -129,8 +129,9 @@ def emit_pdf_parts(
     multi = len(parts) > 1
     for part_i, part in enumerate(parts, start=1):
         if multi:
-            base = sanitize_stem(stem)
-            out_name = f"{base}_{index:03d}_p{part_i:02d}.pdf"
+            out_name = build_filename(
+                sanitize_stem(stem), f"_{index:03d}_p{part_i:02d}", ".pdf"
+            )
         else:
             out_name = sanitize_filename(stem, ".pdf", index=index)
         batch.outputs.append(
